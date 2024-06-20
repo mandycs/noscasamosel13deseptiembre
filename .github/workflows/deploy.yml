@@ -18,13 +18,19 @@ jobs:
         with:
           node-version: '16'
 
+      - name: Change to project directory
+        run: cd boda
+
       - name: Install dependencies
         run: npm install
+        working-directory: ./boda
 
       - name: Build the project
         run: npm run build
+        working-directory: ./boda
 
       - name: Deploy to GitHub Pages
         run: npm run deploy
+        working-directory: ./boda
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
