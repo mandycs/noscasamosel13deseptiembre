@@ -25,14 +25,13 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./boda
 
       - name: Build the project
         run: npm run build
-        working-directory: ./boda
 
       - name: Deploy to GitHub Pages
-        run: npm run deploy
-        working-directory: ./boda
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/mandycs/noscasamosel13deseptiembre.git
+          npm run deploy
