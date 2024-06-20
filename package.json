@@ -2,7 +2,7 @@
   "name": "noscasamosel13deseptiembre",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://mandycs.github.io/noscasamosel13deseptiembre",
+  "homepage": "https://mandycs.github.io/noscasamosel13deseptiembre",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
