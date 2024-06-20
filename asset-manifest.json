@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/noscasamosel13deseptiembre/static/css/main.a93ca9fc.css",
+    "main.js": "/noscasamosel13deseptiembre/static/js/main.9567259e.js",
+    "static/js/453.489f7133.chunk.js": "/noscasamosel13deseptiembre/static/js/453.489f7133.chunk.js",
+    "index.html": "/noscasamosel13deseptiembre/index.html",
+    "main.a93ca9fc.css.map": "/noscasamosel13deseptiembre/static/css/main.a93ca9fc.css.map",
+    "main.9567259e.js.map": "/noscasamosel13deseptiembre/static/js/main.9567259e.js.map",
+    "453.489f7133.chunk.js.map": "/noscasamosel13deseptiembre/static/js/453.489f7133.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a93ca9fc.css",
+    "static/js/main.9567259e.js"
+  ]
+}
