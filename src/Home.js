@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './Home.css';
 
 const MultiStepForm = () => {
-    const [currentScreen, setCurrentScreen] = useState(12);
+    const [currentScreen, setCurrentScreen] = useState(1);
     const [showContent, setShowContent] = useState(false);
     const [formData, setFormData] = useState({
         surveyName: '',
         numeroDePersonas: '',
         names: {},
         noches: '',
-        sleepLocation: 'Tienda',
+        sleepLocation: '',
         additionalEquipment: '',
         tieneTienda: '',
         tieneColchon: '',
