@@ -140,6 +140,7 @@ input[type="email"]:focus {
 }
 
 .options {
+    margin-top: 40px;
     display: flex;
     flex-direction: column; /* Colocar los botones en columna */
     align-items: center;
@@ -147,24 +148,37 @@ input[type="email"]:focus {
     margin-bottom: 20px;
 }
 
-.option-button {
+.options .option-button {
     padding: 10px 20px;
     font-size: 16px;
     border: 2px solid #4CAF50; /* Verde */
-    background-color: transparent;
+    background-color: rgba(76, 175, 80, 0.3); /* Verde con opacidad */
     color: #4CAF50;
-    border-radius: 25%;
     cursor: pointer;
+    border-radius: 20px;
     transition: background-color 0.3s, color 0.3s;
-    width: 100px; /* Ancho fijo para los botones */
+    width: 300px; /* Ancho ajustado */
 }
 
-.option-button.selected {
-    background-color: #4CAF50;
+.options .option-button.selected {
+    background-color: rgba(76, 175, 80, 1); /* Verde sólido */
     color: white;
 }
 
-.option-button:hover {
-    background-color: #45a049; /* Verde más oscuro */
+.options .option-button:hover {
+    background-color: rgba(69, 160, 73, 1); /* Verde más oscuro */
     color: white;
+}
+
+/* Estilo específico para el label de la tercera pantalla */
+.people-label {
+    font-size: 20px; /* Ajusta el tamaño del texto según necesites */
+    color: #333; /* Color del texto */
+    font-weight: bold;
+    margin-bottom: 15px; /* Espaciado adicional si es necesario */
+}
+
+.nights {
+    font-size: 20px; /* Ajusta el tamaño del texto según necesites */
+    font-weight: bold;
 }
