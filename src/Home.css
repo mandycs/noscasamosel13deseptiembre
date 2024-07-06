@@ -66,7 +66,7 @@ body, html {
 .button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #4CAF50; /* Verde */
+    background-color: rgb(107, 164, 250); /* Verde */
     color: white;
     border: none;
     border-radius: 5px;
@@ -75,7 +75,7 @@ body, html {
 }
 
 .button:hover {
-    background-color: #45a049; /* Verde más oscuro */
+    background-color: rgb(107, 164, 250); /* Verde más oscuro */
 }
 
 .required {
@@ -136,7 +136,7 @@ input[type="email"]::placeholder {
 input[type="text"]:focus,
 input[type="email"]:focus {
     outline: none;
-    border-bottom: 2px solid #4CAF50; /* Verde */
+    border-bottom: 2px solid #6ba4fa; /* Verde */
 }
 
 .options {
@@ -151,9 +151,9 @@ input[type="email"]:focus {
 .options .option-button {
     padding: 10px 20px;
     font-size: 16px;
-    border: 2px solid #4CAF50; /* Verde */
-    background-color: rgba(76, 175, 80, 0.3); /* Verde con opacidad */
-    color: #4CAF50;
+    border: 2px solid #6ba4fa; /* Verde */
+    background-color: rgba(107, 164, 250, 0.3); /* Verde con opacidad */
+    color: #333;
     cursor: pointer;
     border-radius: 20px;
     transition: background-color 0.3s, color 0.3s;
@@ -161,12 +161,12 @@ input[type="email"]:focus {
 }
 
 .options .option-button.selected {
-    background-color: rgba(76, 175, 80, 1); /* Verde sólido */
-    color: white;
+    background-color: rgba(107, 164, 250, 1); /* Verde sólido */
+    color: #333;
 }
 
 .options .option-button:hover {
-    background-color: rgba(69, 160, 73, 1); /* Verde más oscuro */
+    background-color: rgb(107, 164, 250); /* Verde más oscuro */
     color: white;
 }
 

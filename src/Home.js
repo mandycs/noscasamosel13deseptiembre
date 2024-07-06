@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import './Home.css';
 
 const MultiStepForm = () => {
-    const [currentScreen, setCurrentScreen] = useState(1);
+    const [currentScreen, setCurrentScreen] = useState(12);
     const [showContent, setShowContent] = useState(false);
     const [formData, setFormData] = useState({
         surveyName: '',
-        numberOfPeople: '',
+        numeroDePersonas: '',
         names: {},
-        nights: '',
-        sleepLocation: '',
+        noches: '',
+        sleepLocation: 'Tienda',
         additionalEquipment: '',
-        hasTent: '',
-        hasMatress: '',
-        additionalQuestion: '',
+        tieneTienda: '',
+        tieneColchon: '',
+        dormirPersona: '',
         selectedOption: '' // Nuevo campo para almacenar la opción seleccionada
     });
     const [errors, setErrors] = useState({});
@@ -31,8 +31,8 @@ const MultiStepForm = () => {
         if (currentScreen === 2 && !formData.surveyName) {
             tempErrors.surveyName = 'Este campo es obligatorio';
         }
-        if (currentScreen === 3 && !formData.numberOfPeople) {
-            tempErrors.numberOfPeople = 'Este campo es obligatorio';
+        if (currentScreen === 3 && !formData.numeroDePersonas) {
+            tempErrors.numeroDePersonas = 'Este campo es obligatorio';
         }
         if (currentScreen === 4) {
             const names = Object.values(formData.names);
@@ -40,21 +40,24 @@ const MultiStepForm = () => {
                 tempErrors.names = 'Todos los nombres son obligatorios';
             }
         }
-        if (currentScreen === 7 && !formData.nights) {
-            tempErrors.nights = 'Este campo es obligatorio';
+        if (currentScreen === 7 && !formData.noches) {
+            tempErrors.noches = 'Este campo es obligatorio';
         }
-        if (currentScreen === 8 && formData.nights !== 'none' && !formData.sleepLocation) {
+        if (currentScreen === 8 && formData.noches !== 'none' && !formData.sleepLocation) {
             tempErrors.sleepLocation = 'Este campo es obligatorio';
         }
-        if (currentScreen === 10 && formData.sleepLocation === 'Tienda' && !formData.hasTent) {
-            tempErrors.hasTent = 'Este campo es obligatorio';
+        if (currentScreen === 10 && formData.sleepLocation === 'Tienda' && !formData.tieneTienda) {
+            tempErrors.tieneTienda = 'Este campo es obligatorio';
         }
-        if (currentScreen === 11 && formData.sleepLocation === 'Tienda' && !formData.hasMatress) {
-            tempErrors.hasMatress = 'Este campo es obligatorio';
+        if (currentScreen === 11 && formData.sleepLocation === 'Tienda' && !formData.tieneColchon) {
+            tempErrors.tieneColchon = 'Este campo es obligatorio';
+        }
+        if (currentScreen === 11 && formData.sleepLocation === 'Tienda' && formData.tieneColchon === 'yes' && !formData.additionalEquipment) {
+            tempErrors.additionalEquipment = 'Este campo es obligatorio';
         }
         if (currentScreen === 12 && formData.sleepLocation === 'Tienda' &&
-            (formData.selectedOption === 'option1' || formData.selectedOption === 'option2') && !formData.additionalQuestion) {
-            tempErrors.additionalQuestion = 'Este campo es obligatorio';
+            (formData.selectedOption === 'habitaciones' || formData.selectedOption === 'noHabitaciones') && !formData.dormirPersona) {
+            tempErrors.dormirPersona = 'Este campo es obligatorio';
         }
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
@@ -68,18 +71,20 @@ const MultiStepForm = () => {
             setShowContent(false);
             setTimeout(() => {
                 setCurrentScreen(prevScreen => {
-                    if (prevScreen === 3 && formData.numberOfPeople === '1') {
-                        setFormData(prevData => ({ ...prevData, numberOfPeople: '' })); // Resetear el valor para evitar preselección
+                    if (prevScreen === 3 && formData.numeroDePersonas === '1') {
+                        setFormData(prevData => ({ ...prevData, numeroDePersonas: '' })); // Resetear el valor para evitar preselección
                         setConfirmScreen(true);
                         return prevScreen; // Mantener la pantalla actual para mostrar confirmación
                     } else if (confirmScreen) {
                         setConfirmScreen(false);
                         return prevScreen + 1; // Avanzar después de la confirmación
                     } else {
-                        if (prevScreen === 7 && formData.nights === 'none') {
+                        if (prevScreen === 7 && formData.noches === 'none') {
                             return 9; // Ir a la pantalla de no quedarse a dormir
                         } else if (prevScreen === 8 && formData.sleepLocation === 'Tienda') {
                             return 10; // Ir a la primera pantalla específica de Tienda de campaña
+                        } else if (prevScreen === 9) {
+                            return 13; // Ir a la pantalla de coche
                         } else if (prevScreen === 10) {
                             return 11; // Ir a la segunda pantalla específica de Tienda de campaña
                         } else if (prevScreen === 11 && formData.sleepLocation === 'Tienda') {
@@ -91,7 +96,6 @@ const MultiStepForm = () => {
                 setShowContent(true);
                 setIsTransitioning(false);
                 console.log('formData after validation:', formData);
-
             }, 2000);
         }
     };
@@ -111,7 +115,7 @@ const MultiStepForm = () => {
     const handleOptionChange = (value) => {
         setFormData(prevData => ({
             ...prevData,
-            numberOfPeople: value,
+            numeroDePersonas: value,
         }));
         console.log('formData after option change:', formData);
     };
@@ -128,12 +132,12 @@ const MultiStepForm = () => {
         console.log('Confirm screen status', confirmScreen);
     };
 
-    const handleNightsChange = (value) => {
+    const handlenochesChange = (value) => {
         setFormData(prevData => ({
             ...prevData,
-            nights: value,
+            noches: value,
         }));
-        console.log('formData after nights change:', formData);
+        console.log('formData after noches change:', formData);
     };
 
     const handleSleepLocationChange = (value) => {
@@ -195,7 +199,7 @@ const MultiStepForm = () => {
                         <form onSubmit={handleSubmit}>
                             <label className="label-names">
                                 Nombre de esta encuesta:<span className="required">*</span><br />
-                                <small>Ejemplo: Familia Granadete, Encarnita & Antonio, Encarnita & Cía o simplemente Encarnita.</small><br />
+                                <small>Ejemplo: Familia Granadete, Antoñita & Antonio, Antoñita & Cía o simplemente Antoñita.</small><br />
                                 <input
                                     type="text"
                                     name="surveyName"
@@ -217,11 +221,11 @@ const MultiStepForm = () => {
                                 ¿Cuántas personas sois?:<span className="required">*</span><br />
                             </label>
                             <div className="options">
-                                <button type="button" className={`option-button ${formData.numberOfPeople === '1' ? 'selected' : ''}`} onClick={() => handleOptionChange('1')}>1</button>
-                                <button type="button" className={`option-button ${formData.numberOfPeople === '2' ? 'selected' : ''}`} onClick={() => handleOptionChange('2')}>2</button>
-                                <button type="button" className={`option-button ${formData.numberOfPeople === '2 or more' ? 'selected' : ''}`} onClick={() => handleOptionChange('2 or more')}>2 ó más</button>
+                                <button type="button" className={`option-button ${formData.numeroDePersonas === '1' ? 'selected' : ''}`} onClick={() => handleOptionChange('1')}>1</button>
+                                <button type="button" className={`option-button ${formData.numeroDePersonas === '2' ? 'selected' : ''}`} onClick={() => handleOptionChange('2')}>2</button>
+                                <button type="button" className={`option-button ${formData.numeroDePersonas === '2 or more' ? 'selected' : ''}`} onClick={() => handleOptionChange('2 or more')}>2 ó más</button>
                             </div>
-                            {errors.numberOfPeople && <span className="error">{errors.numberOfPeople}</span>}
+                            {errors.numeroDePersonas && <span className="error">{errors.numeroDePersonas}</span>}
                             <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
                         </form>
                     </div>
@@ -233,8 +237,8 @@ const MultiStepForm = () => {
                                 ¿Vienes con tu pareja?<span className="required">*</span><br />
                             </label>
                             <div className="options">
-                                <button type="button" className={`option-button ${formData.numberOfPeople === '2' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('yes')}>Sí</button>
-                                <button type="button" className={`option-button ${formData.numberOfPeople === '1' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('no')}>No</button>
+                                <button type="button" className={`option-button ${formData.numeroDePersonas === '2' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('yes')}>Sí</button>
+                                <button type="button" className={`option-button ${formData.numeroDePersonas === '1' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('no')}>No</button>
                             </div>
                             <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
                         </form>
@@ -243,7 +247,7 @@ const MultiStepForm = () => {
                 {currentScreen === 4 && !confirmScreen && (
                     <div className={`screen ${showContent ? 'show' : ''}`}>
                         <form onSubmit={handleSubmit}>
-                            {formData.numberOfPeople !== '1' ? (
+                            {formData.numeroDePersonas !== '1' ? (
                                 <>
                                     <label className="label-names">
                                         Nombres de las personas que vienen (separados por comas):<span className="required">*</span><br />
@@ -320,20 +324,20 @@ const MultiStepForm = () => {
                 {currentScreen === 7 && !confirmScreen && (
                     <div className={`screen ${showContent ? 'show' : ''}`}>
                         <form onSubmit={handleSubmit}>
-                            <label className='nights'>
+                            <label className='noches'>
                                 ¿Cuántos días te quedarás a dormir?<span className="required">*</span><br />
                             </label>
                             <div className="options">
-                                <button type="button" className={`option-button ${formData.nights === 'none' ? 'selected' : ''}`} onClick={() => handleNightsChange('none')}>Ninguno</button>
-                                <button type="button" className={`option-button ${formData.nights === 'friday' ? 'selected' : ''}`} onClick={() => handleNightsChange('friday')}>Solo el viernes noche</button>
-                                <button type="button" className={`option-button ${formData.nights === 'both' ? 'selected' : ''}`} onClick={() => handleNightsChange('both')}>Viernes noche y Sábado noche</button>
+                                <button type="button" className={`option-button ${formData.noches === 'none' ? 'selected' : ''}`} onClick={() => handlenochesChange('none')}>Ninguno</button>
+                                <button type="button" className={`option-button ${formData.noches === 'friday' ? 'selected' : ''}`} onClick={() => handlenochesChange('friday')}>Solo el viernes noche</button>
+                                <button type="button" className={`option-button ${formData.noches === 'both' ? 'selected' : ''}`} onClick={() => handlenochesChange('both')}>Viernes noche y Sábado noche</button>
                             </div>
-                            {errors.nights && <span className="error">{errors.nights}</span>}
+                            {errors.noches && <span className="error">{errors.noches}</span>}
                             <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
                         </form>
                     </div>
                 )}
-                {currentScreen === 8 && !confirmScreen && formData.nights !== 'none' && (
+                {currentScreen === 8 && !confirmScreen && formData.noches !== 'none' && (
                     <div className={`screen ${showContent ? 'show' : ''}`}>
                         <form onSubmit={handleSubmit}>
                             <label className='sleep-location'>
@@ -358,7 +362,7 @@ const MultiStepForm = () => {
                         </form>
                     </div>
                 )}
-                {currentScreen === 9 && !confirmScreen && formData.nights === 'none' && (
+                {currentScreen === 9 && !confirmScreen && formData.noches === 'none' && (
                     <div className={`screen ${showContent ? 'show' : ''}`}>
                         <p className="Welcome">
                             Entendemos que no te quedarás a dormir,<br />
@@ -374,10 +378,10 @@ const MultiStepForm = () => {
                                 ¿Tienes tienda propia?<span className="required">*</span><br />
                             </label>
                             <div className="options">
-                                <button type="button" className={`option-button ${formData.hasTent === 'yes' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('hasTent', 'yes')}>Sí</button>
-                                <button type="button" className={`option-button ${formData.hasTent === 'no' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('hasTent', 'no')}>No</button>
+                                <button type="button" className={`option-button ${formData.tieneTienda === 'yes' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('tieneTienda', 'yes')}>Sí</button>
+                                <button type="button" className={`option-button ${formData.tieneTienda === 'no' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('tieneTienda', 'no')}>No</button>
                             </div>
-                            {errors.hasTent && <span className="error">{errors.hasTent}</span>}
+                            {errors.tieneTienda && <span className="error">{errors.tieneTienda}</span>}
                             <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
                         </form>
                     </div>
@@ -389,10 +393,26 @@ const MultiStepForm = () => {
                                 ¿Tienes esterillas o colchón inflable que quieras llevarte para dormir?<span className="required">*</span><br />
                             </label>
                             <div className="options">
-                                <button type="button" className={`option-button ${formData.hasMatress === 'yes' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('hasMatress', 'yes')}>Sí</button>
-                                <button type="button" className={`option-button ${formData.hasMatress === 'no' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('hasMatress', 'no')}>No</button>
+                                <button type="button" className={`option-button ${formData.tieneColchon === 'yes' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('tieneColchon', 'yes')}>Sí</button>
+                                <button type="button" className={`option-button ${formData.tieneColchon === 'no' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('tieneColchon', 'no')}>No</button>
                             </div>
-                            {errors.hasMatress && <span className="error">{errors.hasMatress}</span>}
+                            {(formData.tieneColchon === 'yes') && (
+                                <div>
+                                    <label className="label-names">
+                                        ¿Qué tienes exactamente?<span className="required">*</span><br />
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="additionalEquipment"
+                                        placeholder="Tengo un colchón, esterilla o similar..."
+                                        value={formData.additionalEquipment || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+                            )}
+                            {errors.tieneColchon && <span className="error">{errors.tieneColchon}</span>}
+                            {errors.additionalEquipment && <span className="error">{errors.additionalEquipment}</span>}
                             <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
                         </form>
                     </div>
@@ -404,18 +424,21 @@ const MultiStepForm = () => {
                                 En caso de que fuese estrictamente necesario compartir una tienda de campaña de varias habitaciones...<span className="required">*</span><br />
                             </label>
                             <div className="options">
-                                <button type="button" className={`option-button ${formData.selectedOption === 'option1' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'option1' } })}>Si hay varias habitaciones entonces compartiría con  ____</button>
-                                <button type="button" className={`option-button ${formData.selectedOption === 'option2' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'option2' } })}>¡Y sin varias habitaciones! No me importa nada dormir junto a ____</button>
-                                <button type="button" className={`option-button ${formData.selectedOption === 'option3' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'option3' } })}>No compartiría, sorry pero no.</button>
-                                <button type="button" className={`option-button ${formData.selectedOption === 'option4' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'option4' } })}>Hummm no se ya lo vamos viendo jaja</button>
+                                <button type="button" className={`option-button ${formData.selectedOption === 'habitaciones' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'habitaciones' } })}>Si hay varias habitaciones entonces compartiría con  ____</button>
+                                <button type="button" className={`option-button ${formData.selectedOption === 'noHabitaciones' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'noHabitaciones' } })}>¡Y sin varias habitaciones! No me importa nada dormir junto a ____</button>
+                                <button type="button" className={`option-button ${formData.selectedOption === 'nadie' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'nadie' } })}>No compartiría, sorry pero no.</button>
+                                <button type="button" className={`option-button ${formData.selectedOption === 'vamosViendo' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'vamosViendo' } })}>Hummm no se ya lo vamos viendo jaja</button>
                             </div>
-                            {(formData.selectedOption === 'option1' || formData.selectedOption === 'option2') && (
+                            {(formData.selectedOption === 'habitaciones' || formData.selectedOption === 'noHabitaciones') && (
                                 <div>
+                                    <label className="label-names">
+                                        ¿Con quién compartirías / dormirías?<span className="required">*</span><br />
+                                    </label>
                                     <input
                                         type="text"
-                                        name="additionalQuestion"
-                                        placeholder="Escriba su respuesta"
-                                        value={formData.additionalQuestion || ''}
+                                        name="dormirPersona"
+                                        placeholder="Dormiría con ... / Compartiría con ..."
+                                        value={formData.dormirPersona || ''}
                                         onChange={handleInputChange}
                                         required
                                     />
