@@ -4,7 +4,6 @@ import './Home.css';
 const MultiStepForm = () => {
     const [currentScreen, setCurrentScreen] = useState(1);
     const [showContent, setShowContent] = useState(false);
-    const [selectedButton, setSelectedButton] = useState('');
     const [formData, setFormData] = useState({
         surveyName: '',
         numberOfPeople: '',
@@ -14,7 +13,7 @@ const MultiStepForm = () => {
         additionalEquipment: '',
         hasTent: '',
         hasMatress: '',
-        personaDormir: '',
+        additionalQuestion: '',
         selectedOption: '' // Nuevo campo para almacenar la opción seleccionada
     });
     const [errors, setErrors] = useState({});
@@ -54,7 +53,7 @@ const MultiStepForm = () => {
             tempErrors.hasMatress = 'Este campo es obligatorio';
         }
         if (currentScreen === 12 && formData.sleepLocation === 'Tienda' &&
-            (formData.selectedOption === 'habitaciones' || formData.selectedOption === 'noHabitaciones') && !formData.additionalQuestion) {
+            (formData.selectedOption === 'option1' || formData.selectedOption === 'option2') && !formData.additionalQuestion) {
             tempErrors.additionalQuestion = 'Este campo es obligatorio';
         }
         setErrors(tempErrors);
@@ -157,11 +156,6 @@ const MultiStepForm = () => {
         }));
         console.log('formData after confirm option change:', formData);
     };
-
-    const handleButtonSelect = (button) => {
-        setSelectedButton(button);
-    };
-
     return (
         <div className="container">
             <div className="home-background"></div>
@@ -410,17 +404,17 @@ const MultiStepForm = () => {
                                 En caso de que fuese estrictamente necesario compartir una tienda de campaña de varias habitaciones...<span className="required">*</span><br />
                             </label>
                             <div className="options">
-                                <button type="button" className={`option-button ${formData.personaDormir === 'habitaciones' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'personaDormir', value: 'habitaciones' } })}>Si hay varias habitaciones entonces compartiría con  ____</button>
-                                <button type="button" className={`option-button ${formData.personaDormir === 'noHabitaciones' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'personaDormir', value: 'noHabitaciones' } })}>¡Y sin varias habitaciones! No me importa nada dormir junto a ____</button>
-                                <button type="button" className={`option-button ${formData.personaDormir === 'nadie' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'personaDormir', value: 'nadie' } })}>No compartiría, sorry pero no.</button>
-                                <button type="button" className={`option-button ${formData.personaDormir === 'vamosViendo' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'personaDormir', value: 'vamosViendo' } })}>Hummm no se ya lo vamos viendo jaja</button>
+                                <button type="button" className={`option-button ${formData.selectedOption === 'option1' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'option1' } })}>Si hay varias habitaciones entonces compartiría con  ____</button>
+                                <button type="button" className={`option-button ${formData.selectedOption === 'option2' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'option2' } })}>¡Y sin varias habitaciones! No me importa nada dormir junto a ____</button>
+                                <button type="button" className={`option-button ${formData.selectedOption === 'option3' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'option3' } })}>No compartiría, sorry pero no.</button>
+                                <button type="button" className={`option-button ${formData.selectedOption === 'option4' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'option4' } })}>Hummm no se ya lo vamos viendo jaja</button>
                             </div>
-                            {(formData.personaDormir === 'habitaciones' || formData.personaDormir === 'noHabitaciones') && (
+                            {(formData.selectedOption === 'option1' || formData.selectedOption === 'option2') && (
                                 <div>
                                     <input
                                         type="text"
-                                        name="personaDormir"
-                                        placeholder="Dormiría con..."
+                                        name="additionalQuestion"
+                                        placeholder="Escriba su respuesta"
                                         value={formData.additionalQuestion || ''}
                                         onChange={handleInputChange}
                                         required
