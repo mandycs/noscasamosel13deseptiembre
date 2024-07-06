@@ -1,0 +1,170 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.home-background {
+    background-image: url('/public/fondo.jpg'); /* Reemplaza con la ruta de tu imagen */
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Colocar la imagen en el fondo */
+}
+
+.content {
+    min-height: 100vh;
+    width: 100%;
+    overflow-y: auto;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo traslúcido blanco */
+    padding: 20px;
+    box-sizing: border-box; /* Incluir el padding en el tamaño del elemento */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.screen {
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+
+.screen.show {
+    opacity: 1; /* Visible cuando se aplica la clase 'show' */
+}
+
+.Welcome {
+    font-size: 25px;
+    color: #000000;
+    text-align: center;
+    font-style: italic;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 2s ease-in-out, background-color 0.3s; /* Transición suave */
+}
+
+.button:hover {
+    background-color: #45a049; /* Verde más oscuro */
+}
+
+.required {
+    color: red;
+    font-weight: bold;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}
+
+.new-content {
+    font-size: 20px;
+    color: #000000;
+    text-align: center;
+    font-style: italic;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    text-align: center; /* Centrar el texto */
+    font-size: 18px; /* Ajusta el tamaño del texto según necesites */
+}
+
+label small {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px; /* Ajusta el tamaño del texto del ejemplo */
+    color: #666; /* Color gris para el texto del ejemplo */
+}
+
+input[type="text"],
+input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background-color: transparent; /* Fondo transparente */
+    box-sizing: border-box;
+    font-size: 16px;
+    text-align: center;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder {
+    color: #aaa;
+    text-align: center;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus {
+    outline: none;
+    border-bottom: 2px solid #4CAF50; /* Verde */
+}
+
+.options {
+    display: flex;
+    flex-direction: column; /* Colocar los botones en columna */
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.option-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid #4CAF50; /* Verde */
+    background-color: transparent;
+    color: #4CAF50;
+    border-radius: 25%;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    width: 100px; /* Ancho fijo para los botones */
+}
+
+.option-button.selected {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.option-button:hover {
+    background-color: #45a049; /* Verde más oscuro */
+    color: white;
+}
