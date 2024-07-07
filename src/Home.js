@@ -237,8 +237,8 @@ const MultiStepForm = () => {
                                 ¿Vienes con tu pareja?<span className="required">*</span><br />
                             </label>
                             <div className="options">
-                                <button type="button" className={`option-button ${formData.numeroDePersonas === '2' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('yes')}>Sí</button>
-                                <button type="button" className={`option-button ${formData.numeroDePersonas === '1' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('no')}>No</button>
+                                <button type="button" className={`option-button ${formData.numeroDePersonas === '2' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('numeroDePersonas','2')}>Sí</button>
+                                <button type="button" className={`option-button ${formData.numeroDePersonas === '1' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('numeroDePersonas', '1')}>No</button>
                             </div>
                             <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
                         </form>
