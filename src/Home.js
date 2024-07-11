@@ -21,6 +21,8 @@ const MultiStepForm = () => {
         namesCochePasajeros: {},
         transporte: '',
         transportePersona: '',
+        alergico: '',
+        alergias: ''
     });
     const [errors, setErrors] = useState({});
     const [confirmScreen, setConfirmScreen] = useState(false);
@@ -166,10 +168,35 @@ const MultiStepForm = () => {
         console.log('formData after sleepLocation change:', formData);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Formulario enviado:', formData);
+    
+        try {
+            const response = await fetch('http://mandycs.pythonanywhere.com/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+    
+            if (response.ok) {
+                console.log('Formulario enviado exitosamente');
+                // Puedes agregar cualquier lógica adicional aquí, como redireccionar o mostrar un mensaje de éxito
+            } else {
+                console.error('Error al enviar el formulario');
+                // Lógica para manejar el error
+            }
+        } catch (error) {
+            console.error('Error al enviar el formulario:', error);
+            // Lógica para manejar el error
+        }
     };
+    const handleLastScreen = (e) => {
+        handleSubmit(e);
+        handleNextScreen();
+    }
 
     const handleConfirmOptionChange = (name, value) => {
         setFormData(prevData => ({
@@ -627,6 +654,41 @@ const MultiStepForm = () => {
                             </div>
                             <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
                         </form>
+                    </div>
+                )}
+                {currentScreen === 16 && !confirmScreen &&(
+                    <div className={`screen${showContent ? 'show' : ''}`}>
+                        <form onSubmit={handleSubmit}>
+                            <label className='alergias'>
+                                ¿Eres alergico/intolerante a algo?<span className="required">*</span> <br/>
+                            </label>
+                            <div className="options">
+                                <button type="button" className={`option-button ${formData.alergico === 'yes' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'alergico', value: 'yes' } })}>Sí</button>
+                                <button type="button" className={`option-button ${formData.alergico === 'no' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'alergico', value: 'no' } })}>No</button>
+                            </div>
+                            {formData.alergico === 'yes' && (
+                                    <div>
+                                        <input
+                                            type="text"
+                                            name="alergias"
+                                            placeholder="Tengo intolerancia/alergia a..."
+                                            value={formData.alergias || ''}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </div>
+                                )}
+                        </form>
+                        <button type="button" className="button" onClick={handleLastScreen} disabled={isTransitioning}>Enviar</button>
+                    </div>
+                )}
+                {currentScreen === 17 && !confirmScreen && (
+                    <div className={`screen${showContent ? 'show' : ''}`}>
+                        <p className='Welcome'>
+                            Muchas gracias por haber contestado con paciencia a todas nuestras preguntas <br/>
+                            Te esperamos el día 13 de septiembre!!! <br/>
+                            Cualquier duda siempre podrás escribirnos
+                        </p>
                     </div>
                 )}
             </div>
