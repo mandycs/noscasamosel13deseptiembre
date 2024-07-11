@@ -14,7 +14,13 @@ const MultiStepForm = () => {
         tieneTienda: '',
         tieneColchon: '',
         dormirPersona: '',
-        selectedOption: '' // Nuevo campo para almacenar la opción seleccionada
+        selectedOption: '',
+        coche: '',
+        plazasLibres: '',
+        cantidadPlazas: '',
+        namesCochePasajeros: {},
+        transporte: '',
+        transportePersona: '',
     });
     const [errors, setErrors] = useState({});
     const [confirmScreen, setConfirmScreen] = useState(false);
@@ -59,11 +65,24 @@ const MultiStepForm = () => {
             (formData.selectedOption === 'habitaciones' || formData.selectedOption === 'noHabitaciones') && !formData.dormirPersona) {
             tempErrors.dormirPersona = 'Este campo es obligatorio';
         }
+        if (currentScreen === 14 && !formData.coche) {
+            tempErrors.coche = 'Este campo es obligatorio';
+        }
+        if (currentScreen === 15 && formData.coche === 'yes' && formData.plazasLibres === 'plazas' && !formData.cantidadPlazas) {
+            tempErrors.cantidadPlazas = 'Este campo es obligatorio';
+        }
+        if (currentScreen === 15 && formData.coche === 'yes' && formData.plazasLibres === 'lleno') {
+            const namesCochePasajeros = Object.values(formData.namesCochePasajeros);
+            if (namesCochePasajeros.length === 0 || namesCochePasajeros.some(name => !name)) {
+                tempErrors.namesCochePasajeros = 'Todos los nombres son obligatorios';
+            }
+        }
+        if (currentScreen === 15 && formData.coche === 'no' && formData.transporte === 'compartirCocheConocido' && !formData.transportePersona) {
+            tempErrors.transportePersona = 'Este campo es obligatorio';
+        }
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };
-
-
     const handleNextScreen = () => {
         if (isTransitioning) return;
         if (validate()) {
@@ -131,7 +150,6 @@ const MultiStepForm = () => {
         console.log('formData after name change:', formData);
         console.log('Confirm screen status', confirmScreen);
     };
-
     const handlenochesChange = (value) => {
         setFormData(prevData => ({
             ...prevData,
@@ -237,7 +255,7 @@ const MultiStepForm = () => {
                                 ¿Vienes con tu pareja?<span className="required">*</span><br />
                             </label>
                             <div className="options">
-                                <button type="button" className={`option-button ${formData.numeroDePersonas === '2' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('numeroDePersonas','2')}>Sí</button>
+                                <button type="button" className={`option-button ${formData.numeroDePersonas === '2' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('numeroDePersonas', '2')}>Sí</button>
                                 <button type="button" className={`option-button ${formData.numeroDePersonas === '1' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('numeroDePersonas', '1')}>No</button>
                             </div>
                             <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
@@ -255,7 +273,7 @@ const MultiStepForm = () => {
                                     <input
                                         type="text"
                                         name="names"
-                                        placeholder="Escriba su respuesta"
+                                        placeholder="Sus nombres son..."
                                         value={Object.values(formData.names).join(', ')}
                                         onChange={(e) => {
                                             const namesArray = e.target.value.split(',').map(name => name.trim());
@@ -279,7 +297,7 @@ const MultiStepForm = () => {
                                     <input
                                         type="text"
                                         name="name1"
-                                        placeholder="Escriba su respuesta"
+                                        placeholder="Su nombre es..."
                                         value={formData.names[0] || ''}
                                         onChange={(e) => handleNameChange(0, e.target.value)}
                                         required
@@ -373,6 +391,11 @@ const MultiStepForm = () => {
                 )}
                 {currentScreen === 10 && !confirmScreen && formData.sleepLocation === 'Tienda' && (
                     <div className={`screen ${showContent ? 'show' : ''}`}>
+                        <p className="Welcome">¡Vale, genial! <br />
+                            En ese caso contaremos contigo / con vosotros para la zona de Glamping.<br />
+                            Cuando lleguéis las tiendas estarán montadas y cuquis, sin embargo, <br />
+                            nos haría falta haceros unas preguntas y que nos contéis un poquito:
+                        </p>
                         <form onSubmit={handleSubmit}>
                             <label className="people-label">
                                 ¿Tienes tienda propia?<span className="required">*</span><br />
@@ -381,6 +404,22 @@ const MultiStepForm = () => {
                                 <button type="button" className={`option-button ${formData.tieneTienda === 'yes' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('tieneTienda', 'yes')}>Sí</button>
                                 <button type="button" className={`option-button ${formData.tieneTienda === 'no' ? 'selected' : ''}`} onClick={() => handleConfirmOptionChange('tieneTienda', 'no')}>No</button>
                             </div>
+                            {(formData.tieneTienda === 'yes') && (
+                                <div>
+                                    <p className='Welcome'>
+                                        Perfe, te dejamos el recuadro para que nos digas las medidas y <br />
+                                        el modelo además de cuando podrías dárnosla <br />
+                                        por adelantado para dejarlo todo montado.
+                                    </p>
+                                </div>
+                            )}
+                            {(formData.tieneTienda === 'no') && (
+                                <div>
+                                    <p className='Welcome'>
+                                        Ok! Sin problema, hay de sobra. Te asignaremos una para ti ^^
+                                    </p>
+                                </div>
+                            )}
                             {errors.tieneTienda && <span className="error">{errors.tieneTienda}</span>}
                             <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
                         </form>
@@ -409,6 +448,23 @@ const MultiStepForm = () => {
                                         onChange={handleInputChange}
                                         required
                                     />
+                                    <p className='Welcome'>
+                                        Vale, déjanoslo por adelantado y estará allí esperándote para dormir. <br />
+                                        Si tienes alguna otra cosa que necesites, como saco, sábanas, almohadas<br />
+                                        o algún otro accesorio déjanoslo también todo junto.<br />
+                                        Cualquier momento es bueno para traérnoslo a casa, aunque lo mejor sería a partir de Agosto.
+                                    </p>
+                                </div>
+                            )}
+                            {(formData.tieneColchon === 'no') && (
+                                <div>
+                                    <p className='Welcome'>
+                                        ¡Recibido, no hay problema! Hemos preparado algunos colchones de goma espuma. <br />
+                                        Recuerda preparar tus sábanas, almohada y saco/mantita si es que lo necesitas. <br />
+                                        Tendrás que déjanoslo por adelantado y estará allí esperándote para dormir.<br />
+                                        Si tienes alguna otra cosa que necesites, déjanoslo también todo junto. <br />
+                                        Cualquier momento es bueno para traérnoslo a casa, aunque lo mejor sería a partir de Agosto.
+                                    </p>
                                 </div>
                             )}
                             {errors.tieneColchon && <span className="error">{errors.tieneColchon}</span>}
@@ -422,6 +478,7 @@ const MultiStepForm = () => {
                         <form onSubmit={handleSubmit}>
                             <label className='label-names'>
                                 En caso de que fuese estrictamente necesario compartir una tienda de campaña de varias habitaciones...<span className="required">*</span><br />
+                                <small>Tranqui esto lo hemos diseñado nosotras, nadie más verá las respuestas jajaja 🤭</small><br />
                             </label>
                             <div className="options">
                                 <button type="button" className={`option-button ${formData.selectedOption === 'habitaciones' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'selectedOption', value: 'habitaciones' } })}>Si hay varias habitaciones entonces compartiría con  ____</button>
@@ -448,10 +505,136 @@ const MultiStepForm = () => {
                         </form>
                     </div>
                 )}
-
+                {currentScreen === 13 && !confirmScreen && (
+                    <div className={`screen ${showContent ? 'show' : ''}`}>
+                        <p className="Welcome">
+                            Respecto a los vehículos, hay poco sitio para aparcar <br />
+                            coches por lo que la organización<br />
+                            de la llegada de invitados es crucial para nosotras. <br />
+                            Para la vuelta siempre hay más opciones.<br />
+                            Necesitamos conocer cuantos coches vendrán y organizarlos. <br />
+                            Además, también se han pensado ubicaciones cercanas<br />
+                            donde aparcar y que alguien os recoja. <br />
+                            Si tienes cualquier duda o caso especial <br />
+                            llámanos y lo vemos juntas. <br />
+                            Por favor tened en cuenta los diez <br />
+                            kilómetros de curvas del camino, <br />
+                            que no caben muchos coches aparcados <br />
+                            y que todos al final vamos a beber.<br />
+                            No queremos que nadie conduzca y beba en nuestra boda.
+                        </p>
+                        <button className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
+                    </div>
+                )}
+                {currentScreen === 14 && !confirmScreen && (
+                    <div className={`screen ${showContent ? 'show' : ''}`}>
+                        <form onSubmit={handleSubmit}>
+                            <label className='coche'>
+                                Cuéntanos ¿Cuál es tu caso?<span className="required">*</span><br />
+                            </label>
+                            <div className="options">
+                                <button type="button" className={`option-button ${formData.coche === 'Llevo coche' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'coche', value: 'Llevo coche' } })}>Llevo el coche</button>
+                                <button type="button" className={`option-button ${formData.coche === 'No llevo coche o no tengo' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'coche', value: 'No llevo coche o no tengo' } })}>No tengo o no voy a llevar mi coche. </button>
+                            </div>
+                            {errors.coche && <span className="error">{errors.coche}</span>}
+                            <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
+                        </form>
+                    </div>
+                )}
+                {currentScreen === 15 && !confirmScreen && formData.coche === 'Llevo coche' && (
+                    <div className={`screen ${showContent ? 'show' : ''}`}>
+                        <form onSubmit={handleSubmit}>
+                            <label className='coche'>
+                                ¿Vendrá el coche lleno o tienes plazas libres?<span className="required">*</span><br />
+                            </label>
+                            <div className="options">
+                                <button type="button" className={`option-button ${formData.plazasLibres === 'lleno' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'plazasLibres', value: 'lleno' } })}>Llevo el coche completo</button>
+                                <button type="button" className={`option-button ${formData.plazasLibres === 'plazas' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'plazasLibres', value: 'plazas' } })}>Tenemos alguna plaza libre </button>
+                            </div>
+                            {formData.plazasLibres === 'plazas' && (
+                                <div>
+                                    <label className="label-names">
+                                        ¿Cuántas plazas libres tienes?<span className="required">*</span><br />
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="cantidadPlazas"
+                                        placeholder="Me quedan 2 plazas libres"
+                                        value={formData.cantidadPlazas}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                    {errors.cantidadPlazas && <span className="error">{errors.cantidadPlazas}</span>}
+                                </div>
+                            )}
+                            {formData.plazasLibres === 'lleno' && (
+                                <div>
+                                    <label className="label-names">
+                                        ¿Quién viene contigo?<span className="required">*</span><br />
+                                        <small>Por favor, escribe los nombres separados por comas.</small><br />
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="namesCochePasajeros"
+                                        placeholder="Nombres de las personas"
+                                        value={Object.values(formData.namesCochePasajeros).join(', ')}
+                                        onChange={(e) => {
+                                            const namesArray = e.target.value.split(',').map(name => name.trim());
+                                            const namesObj = namesArray.reduce((acc, name, index) => {
+                                                acc[index] = name;
+                                                return acc;
+                                            }, {});
+                                            setFormData(prevData => ({
+                                                ...prevData,
+                                                namesCochePasajeros: namesObj
+                                            }));
+                                        }}
+                                        required
+                                    />
+                                    {errors.namesCochePasajeros && <span className="error">{errors.namesCochePasajeros}</span>}
+                                </div>
+                            )}
+                            <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
+                        </form>
+                    </div>
+                )}
+                {currentScreen === 15 && !confirmScreen && formData.coche === 'No llevo coche o no tengo' && (
+                    <div className={`screen ${showContent ? 'show' : ''}`}>
+                        <form onSubmit={handleSubmit}>
+                            <label className='coche'>
+                                Cuéntanos ¿Cuál es tu caso?<span className="required">*</span><br />
+                            </label>
+                            <div className="options">
+                                <button type="button" className={`option-button ${formData.transporte === 'compartirCocheConocido' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'transporte', value: 'compartirCocheConocido' } })}>Voy en el coche de: No worries por mí</button>
+                                {formData.transporte === 'compartirCocheConocido' && (
+                                    <div>
+                                        <label className="label-names">
+                                            ¿Con quién vas?<span className="required">*</span><br />
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="transportePersona"
+                                            placeholder="Voy con ..."
+                                            value={formData.transportePersona || ''}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                        {errors.transportePersona && <span className="error">{errors.transportePersona}</span>}
+                                    </div>
+                                )}
+                                <button type="button" className={`option-button ${formData.transporte === 'compartirCocheDesonocido' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'transporte', value: 'compartirCocheDesonocido' } })}>Podría compartir pero no sé aún</button>
+                                <button type="button" className={`option-button ${formData.transporte === 'Uber' ? 'selected' : ''}`} onClick={() => handleInputChange({ target: { name: 'transporte', value: 'Uber' } })}>Prefiero ir en Uber (20-35 euros) por mi cuenta y me despreocupo.</button>
+                            </div>
+                            <button type="button" className="button" onClick={handleNextScreen} disabled={isTransitioning}>Siguiente</button>
+                        </form>
+                    </div>
+                )}
             </div>
         </div>
-    );
+    );// CurrentScreen 14 y 15, una con formData.coche === 'yes' y otra con formData.coche === 'no'
+    //En yes, tiene que estar si el coche viene lleno o si tiene x plazas libres
+    //En no, tiene que haber un voy con ___ input, y un no se con quien ir pero puedo compartir gastos, y un voy en uber.
+    //Pantalla de comida, si hay alergias, intolerancias, vegetarianos, veganos, etc.   
 }
 
 export default MultiStepForm;
