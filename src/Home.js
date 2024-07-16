@@ -104,7 +104,7 @@ const MultiStepForm = () => {
                             return 9; // Ir a la pantalla de no quedarse a dormir
                         } else if (prevScreen === 8 && formData.sleepLocation === 'Tienda') {
                             return 10; // Ir a la primera pantalla específica de Tienda de campaña
-                        } else if (prevScreen === 9) {
+                        } else if (prevScreen === 9 ||(prevScreen === 8 && formData.sleepLocation !== 'Tienda')) {
                             return 13; // Ir a la pantalla de coche
                         } else if (prevScreen === 10) {
                             return 11; // Ir a la segunda pantalla específica de Tienda de campaña
