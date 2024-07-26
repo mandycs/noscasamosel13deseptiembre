@@ -92,19 +92,20 @@ const MultiStepForm = () => {
             setShowContent(false);
             setTimeout(() => {
                 setCurrentScreen(prevScreen => {
-                    if (prevScreen === 3 && formData.numeroDePersonas === '1') {
+                    if (confirmScreen) {
+                        setConfirmScreen(false);
+                        return prevScreen + 1; // Avanzar después de la confirmación
+                    } 
+                    else if (prevScreen === 3 && formData.numeroDePersonas === '1') {
                         setFormData(prevData => ({ ...prevData, numeroDePersonas: '' })); // Resetear el valor para evitar preselección
                         setConfirmScreen(true);
                         return prevScreen; // Mantener la pantalla actual para mostrar confirmación
-                    } else if (confirmScreen) {
-                        setConfirmScreen(false);
-                        return prevScreen + 1; // Avanzar después de la confirmación
                     } else {
                         if (prevScreen === 7 && formData.noches === 'none') {
                             return 9; // Ir a la pantalla de no quedarse a dormir
                         } else if (prevScreen === 8 && formData.sleepLocation === 'Tienda') {
                             return 10; // Ir a la primera pantalla específica de Tienda de campaña
-                        } else if (prevScreen === 9 ||(prevScreen === 8 && formData.sleepLocation !== 'Tienda')) {
+                        } else if (prevScreen === 9) {
                             return 13; // Ir a la pantalla de coche
                         } else if (prevScreen === 10) {
                             return 11; // Ir a la segunda pantalla específica de Tienda de campaña
