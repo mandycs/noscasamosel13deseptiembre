@@ -174,7 +174,7 @@ const MultiStepForm = () => {
         console.log('Formulario enviado:', formData);
     
         try {
-            const response = await fetch('http://mandycs.pythonanywhere.com/submit', {
+            const response = await fetch('https://mandycs.pythonanywhere.com/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
