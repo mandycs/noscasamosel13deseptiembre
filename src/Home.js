@@ -174,27 +174,42 @@ const MultiStepForm = () => {
         e.preventDefault();
         console.log('Formulario enviado:', formData);
     
-        try {
-            const response = await fetch('https://mandycs.pythonanywhere.com/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+        const maxRetries = 3; // Número máximo de intentos
+        let attempt = 0;
     
-            if (response.ok) {
-                console.log('Formulario enviado exitosamente');
-                // Puedes agregar cualquier lógica adicional aquí, como redireccionar o mostrar un mensaje de éxito
-            } else {
-                console.error('Error al enviar el formulario');
-                // Lógica para manejar el error
+        while (attempt < maxRetries) {
+            try {
+                const response = await fetch('https://mandycs.pythonanywhere.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+    
+                if (response.ok) {
+                    console.log('Formulario enviado exitosamente');
+                    // Puedes agregar cualquier lógica adicional aquí, como redireccionar o mostrar un mensaje de éxito
+                    break; // Salimos del ciclo porque se envió exitosamente
+                } else {
+                    console.error(`Error al enviar el formulario (Intento ${attempt + 1} de ${maxRetries})`);
+                }
+            } catch (error) {
+                console.error(`Error al enviar el formulario (Intento ${attempt + 1} de ${maxRetries}):`, error);
             }
-        } catch (error) {
-            console.error('Error al enviar el formulario:', error);
-            // Lógica para manejar el error
+    
+            attempt++;
+    
+            if (attempt < maxRetries) {
+                console.log('Reintentando...');
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Espera 2 segundos antes de reintentar
+            } else {
+                console.error('Todos los intentos de envío fallaron.');
+                // Aquí puedes manejar el caso donde todos los intentos fallaron, como mostrar un mensaje al usuario
+            }
         }
     };
+    
     const handleLastScreen = (e) => {
         handleSubmit(e);
         handleNextScreen();
